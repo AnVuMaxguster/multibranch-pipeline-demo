@@ -2,7 +2,7 @@ pipeline {
 
     agent {
         node {
-            label 'master'
+            label 'JENKINS-AGENT'
         }
     }
 
@@ -18,6 +18,7 @@ pipeline {
         stage('Cleanup Workspace') {
             steps {
                 cleanWs()
+                echo 'Jenkinsfile from branch: master' // TO-REMOVE
                 sh """
                 echo "Cleaned Up Workspace For Project"
                 """
@@ -34,7 +35,7 @@ pipeline {
             }
         }
 
-        stage(' Unit Testing') {
+        stage('Unit Testing') {
             steps {
                 sh """
                 echo "Running Unit Tests"
@@ -50,17 +51,36 @@ pipeline {
             }
         }
 
-        stage('Build Deploy Code') {
+        stage('Deploy To Dev & QA') {
             when {
                 branch 'develop'
             }
             steps {
                 sh """
-                echo "Building Artifact"
+                echo "Building Artifact for Dev Environment"
                 """
-
                 sh """
-                echo "Deploying Code"
+                echo "Deploying to Dev Environment"
+                """
+                sh """
+                echo "Deploying to QA Environment"
+                """
+            }
+        }
+
+        stage('Deploy To Staging & Pre-Prod') {
+            when {
+                branch 'master'
+            }
+            steps {
+                sh """
+                echo "Building Artifact for Staging and Pre-Prod Environments"
+                """
+                sh """
+                echo "Deploying to Staging Environment"
+                """
+                sh """
+                echo "Deploying to Pre-Prod Environment"
                 """
             }
         }
