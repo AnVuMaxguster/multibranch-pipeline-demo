@@ -14,11 +14,27 @@ pipeline {
     }
 
     stages {
-        
+        stage('Printing info') {
+            steps {
+            echo 'Branch name and revision:'
+            sh '''
+                git name-rev --name-only HEAD
+                git rev-list --parents -n 1 HEAD
+            '''
+
+            echo 'Multibeanch pipeline env:'
+            sh '''
+                echo "BRANCH_NAME = ${BRANCH_NAME}"
+                echo "CHANGE_ID = ${CHANGE_ID}"
+                echo "CHANGE_BRANCH = ${CHANGE_BRANCH}"
+                echo "CHANGE_TARGET = ${CHANGE_TARGET}"
+            '''
+            }
+        }
+
         stage('Cleanup Workspace') {
             steps {
                 cleanWs()
-                echo 'Jenkinsfile from branch: feature' // TO-REMOVE
                 sh """
                 echo "Cleaned Up Workspace For Project"
                 """
