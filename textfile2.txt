@@ -1,4 +1,3 @@
 Another text file on feature branch.
 Aditional line #1
 Aditional line #2. Additional sentence.
-
